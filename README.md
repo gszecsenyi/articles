@@ -26,7 +26,7 @@ From your checkout directory:
 		
 3. Access through your Docker host system
  	
-		https://localhost:8080/nifi
+		http://localhost:8080/nifi
 		
 5. Stopping
 		
