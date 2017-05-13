@@ -14,11 +14,7 @@ From your checkout directory:
 		
 2. Run the image 
 
-		docker run -i --name twitter2kafka 
-				-p 8080:8080 
-				-p 2181:2181 
-				-p 9092:9092 
-				-t gszecsenyi/twitter2kafka 
+		docker run -i --name twitter2kafka -p 8080:8080 -p 2181:2181 -p 9092:9092 -t gszecsenyi/twitter2kafka
 
 
 	`-p 8080:8080`
