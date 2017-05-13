@@ -7,7 +7,6 @@ My article is about the setup of the environment and the configuration of the Ka
 
 ## Start using the environment
 
-
 ### Preparations
 
 #### Register a twitter account and create application for authentication informations
@@ -112,7 +111,6 @@ We will see in JSON format the twitter data stream
 docker rm -f twitter2kafka_container
 ```
 
-
 ## The Dockerfile
 
 ```docker
@@ -155,7 +153,6 @@ EXPOSE          80 8080 2181 9092
 
 CMD ["start-kafka.sh"]
 ```
-
 
 ### And now let see the Dockerfile step by step: 
 
@@ -203,21 +200,3 @@ RUN             echo '#!/bin/bash' > /usr/bin/start-kafka.sh && \
                 chmod +x /usr/bin/start-kafka.sh
 ```
 This build a shell file, which contains all the execute commands what are needed to execute Kafka and Nifi parallel.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
