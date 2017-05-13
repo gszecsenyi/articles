@@ -43,15 +43,21 @@ Now we create a twitter topic within Kafka
 /opt/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic twitter
 ```
 
+![alt text](https://cloud.githubusercontent.com/assets/363452/26026236/1fac5eda-37f8-11e7-99dd-4dbd8877c65d.png "Create Kafka topic")
+
 ### Start using Nifi
 
 After the execution of the container we have to wait about 1-2 Minutes, and we can open a browser and start using Nifi on http://localhost:8080/nifi address.
+
+![alt text](https://cloud.githubusercontent.com/assets/363452/26026243/200e02fc-37f8-11e7-81ad-d55da300a69f.png "Start using Nifi")
 
 Now we have to add two processors:
 * GetTwitter
 * PublishKafka_0_10
 
-Let join them from GetTwitter to PublisKafka.
+Let join them from GetTwitter to PublishKafka_0_10.
+
+![alt text](https://cloud.githubusercontent.com/assets/363452/26026240/1fedc12c-37f8-11e7-9894-b3eac4434419.png "Start using Nifi")
 
 ### Setup GetTwitter
 Now click with right mouse button on GetTwitter and open the configuration window from GetTwitter. 
@@ -62,19 +68,28 @@ Here we have to fill out the following attributes:
 * AK
 * AKS
 
+![alt text](https://cloud.githubusercontent.com/assets/363452/26026238/1fcd4b68-37f8-11e7-9a63-25fbbf00f358.png "Setup GetTwitter")
+
+
 Click on Apply.
 
-### Setup PublishKafka
-Now click with right mouse button on PublishKafka and open the configuration window from PublishKafka. 
+### Setup PublishKafka_0_10
+Now click with right mouse button on PublishKafka_0_10 and open the configuration window from PublishKafka. 
 Here we have to fill out the following attributes:
 
 * topic
 
 Here fill out with the KAfka topic, which is _twitter_
 
+![alt text](https://cloud.githubusercontent.com/assets/363452/26026237/1fcc1b94-37f8-11e7-813e-ab93a1c26905.png "Setup PublishKafka_0_10")
+
 Click on Apply.
 
+### Executing the dataflow
+
 Now we are ready. Click on Dashboard and execute the Process group with play button. 
+
+![alt text](https://cloud.githubusercontent.com/assets/363452/26026235/1f89b146-37f8-11e7-96e8-a9be8dcd452a.png "Executing the dataflow")
 
 ### Setup a consumer for testing our dataflow. 
 
@@ -88,6 +103,15 @@ Now we start a console consumer to check the incoming dataflow in Kafka
 ```
 
 We will see in JSON format the twitter data stream
+
+![alt text](https://cloud.githubusercontent.com/assets/363452/26026242/200afdf0-37f8-11e7-96b4-d4b8210f5d3e.png "Setup a consumer for testing our dataflow.")
+
+
+### Delete the docker container
+```
+docker rm -f twitter2kafka_container
+```
+
 
 ## The Dockerfile
 
@@ -133,7 +157,7 @@ CMD ["start-kafka.sh"]
 ```
 
 
-### And now let see it step by step: 
+### And now let see the Dockerfile step by step: 
 
 ```docker
 FROM            trivadisbds/base
