@@ -1,12 +1,10 @@
 # Streaming Twitter to Kafka with Apache Nifi
 
-A very common BigData use-case is when Twitter tweets are collected and analysed. This has more forms. 
-The Twitter stream will be stored on HDFS or another local drive or will be analysed or immediately processed with a streaming supported engine as Storm, Spark or Flink. 
-In both case the first step is that the tweets will be collected in a Kafka queue. 
+A very common BigData use-case is the collection and processing of Twitter tweets. It can be done on different ways. The Twitter stream can be stored on HDFS or another local drive or immediately processed with a streaming supported engine as Storm, Spark or Flink. In both cases the first step is that the tweets will be collected in a Kafka queue.
 
-Kafka is a horizontally scalable, fault-tolerant distributed publish-subscribe messaging platform. Kafka is written in Scala and was originally developed by LinkedIn. It is suitable for both offline and online message consumption. 
+Kafka is a horizontally scalable, fault-tolerant distributed publish-subscribe messaging platform. It is written in Scala and was originally developed by LinkedIn. Suitable for both offline and online message consumption. 
 
-Twitter is deliver an API, what  should be accessed. Some years ago this was a bit complex part of the solutions. Now, with the help of Apache Nifi it is getting more simple. The only task what has to to do is setup a Kafka (with zookeeper) and a Nifi in a docker container or on server.
+Twitter delivers API, what should be accessed. Some years ago this was a bit complex part of the solutions, now, with the help of Apache Nifi it is getting simpler. The only task that has to be done is, to setup a Kafka (with zookeeper) and a Nifi in a docker container or on a server.
 
 This article is about the setup of the environment and the configuration of the Kafka producer with Apache Nifi.
 
@@ -16,33 +14,39 @@ This article is about the setup of the environment and the configuration of the 
 
 #### Register a twitter account and create application for authentication informations
 
-We have to register first a Twitter account on http://twitter.com, and register an application on http://apps.twitter.com URL. 
+The first step to do is to register a Twitter account on http://twitter.com, and an application on http://apps.twitter.com URL.
 
-After the registration we have to create an application key on the same site, and now we have all the information, what we need from Twitter.
+After the registration an application key has to be created on the same site. 
+
+This information are needed from Twitter:
 
 * Consumer Key
-* Consumer Secret Key
-* AK
-* AKS
+* Consumer Secret 
+* Access Token
+* Access Token Secret
 
 ### Create and execute the container 
 
-Now we start the container. When the docker image is not available on the local host, then the docker client will once download the image to the local computer. It is about 1GB.
+Now the container can be created. If the docker image is not available on the local host, the docker client will download it automatically.The size of the image is about 1GB.
+
 
 ```
 docker run -i -d --name twitter2kafka_container -p 8080:8080 -p 2181:2181 -p 9092:9092 -t gszecsenyi/twitter2kafka 
 ```
 
-As we see, there is three port assignment. The first port is the port of the Apache Nifi client. We can access Apache Nifi with our Internet Browser. The second and the third port is for zookeeper and Kafka. With the third port we will access our Kafka queue and we can download the messages with a consumer. ( For example with our Spark program). 
+There are three port assignments. 
+
+The first is the port of the Apache Nifi client. It can be accessed by Apache Nifi or via Internet Browser. 
+The second and the third ports are for zookeeper and  for Kafka. With the third port the Kafka queue can be accessed.
 
 ### Create Kafka topic
 
-Open a new shell and execute the following command to login into your running container:
+Open a new shell and execute the following command to login into the running container:
 
 ```
 docker exec -it twitter2kafka_container /bin/bash
 ```
-Now we create a twitter topic within Kafka
+After this step a Twitter topic can be created within Kafka:
 ```
 /opt/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic twitter
 ```
@@ -51,21 +55,22 @@ Now we create a twitter topic within Kafka
 
 ### Start using Nifi
 
-After the execution of the container we have to wait about 1-2 Minutes, and we can open a browser and start using Nifi on http://localhost:8080/nifi address.
+1-2 Minutes after the execution of the container, the Nifi can be opened and used in a browser on the http://localhost:8080/nifi address.
+
 
 ![alt text](https://cloud.githubusercontent.com/assets/363452/26026243/200e02fc-37f8-11e7-81ad-d55da300a69f.png "Start using Nifi")
 
-Now we have to add two processors:
+At this point two processor has to be added:
+
 * GetTwitter
 * PublishKafka_0_10
 
-Let join them from GetTwitter to PublishKafka_0_10.
+They can be joined from GetTwitter to PublishKafka_0_10 Processor.
 
 ![alt text](https://cloud.githubusercontent.com/assets/363452/26026240/1fedc12c-37f8-11e7-9894-b3eac4434419.png "Start using Nifi")
 
 ### Setup GetTwitter
-Now click with right mouse button on GetTwitter and open the configuration window from GetTwitter. 
-Here we have to fill out the following attributes:
+The configuration window can be accessed by right mouse click on GetTwitter. The following attributes has to be filled:
 
 * Consumer Key
 * Consumer Secret Key
@@ -78,20 +83,19 @@ Here we have to fill out the following attributes:
 Click on Apply.
 
 ### Setup PublishKafka_0_10
-Now click with right mouse button on PublishKafka_0_10 and open the configuration window from PublishKafka. 
-Here we have to fill out the following attributes:
+Open the configuration window from PublishKafka by right click on PulishKafka_0_10. Fill the attribute:
 
 * topic
 
-Here fill out with the KAfka topic, which is _twitter_
+Here fill out with the Kafka topic, which is _twitter_ 
 
 ![alt text](https://cloud.githubusercontent.com/assets/363452/26026237/1fcc1b94-37f8-11e7-813e-ab93a1c26905.png "Setup PublishKafka_0_10")
 
-Click on Apply.
+After clicking the ‘Apply’ button the task is done.
 
 ### Executing the dataflow
 
-Now we are ready. Click on Dashboard and execute the Process group with play button. 
+The Process group can be executed with the play button on the Dashboard.
 
 ![alt text](https://cloud.githubusercontent.com/assets/363452/26026235/1f89b146-37f8-11e7-96e8-a9be8dcd452a.png "Executing the dataflow")
 
@@ -101,12 +105,12 @@ Open a new shell window and execute the following commands
 ```
 docker exec -it twitter2kafka_container /bin/bash
 ```
-Now we start a console consumer to check the incoming dataflow in Kafka
+Start a console consumer to check the incoming dataflow in Kafka
 ```
 /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic twitter
 ```
 
-We will see in JSON format the twitter data stream
+The Twitter data stream can be seen in JSON format:
 
 ![alt text](https://cloud.githubusercontent.com/assets/363452/26026242/200afdf0-37f8-11e7-96b4-d4b8210f5d3e.png "Setup a consumer for testing our dataflow.")
 
@@ -177,24 +181,24 @@ ENV             KAFKA_VERSION                 0.10.1.0
 ENV             SCALA_VERSION                 2.11
 ```
 
-We set environment variables for the container, which (AP:the environment varialbes) contains the URL, version and home for products. With this solution the Dockerfile is easier maintenable. 
+Environmental variables can be (must be?) set up for the container, that (AP: the environmental variables) contains the URL, version and home for products. With this solution the Dockerfile can be maintained easier.
+
 
 ```docker
 RUN             mkdir -p ${NIFI_HOME} && \
                 curl ${NIFI_DIST_MIRROR}/${NIFI_VERSION}/nifi-${NIFI_VERSION}-bin.tar.gz | tar xvz -C ${NIFI_HOME} --strip-components=1 && \
                 sed -i -e "s|^nifi.ui.banner.text=.*$|nifi.ui.banner.text=Trivadisbds Docker NiFi ${NIFI_VERSION}|" ${NIFI_HOME}/conf/nifi.properties
-
 ```
-Download and extracting the Apache Nifi software
 
+Download and extracting the Apache Nifi software
 ```docker
 RUN             wget -c ${KAFKA_DIST_MIRROR}/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz && \
                 tar -xzvf kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz && \
                 mv kafka_${SCALA_VERSION}-${KAFKA_VERSION} /opt && \
                 ln -s /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION}/ ${KAFKA_HOME}
 ```
-Donwloading and extracting the Apache Kafka software
 
+Downloading and extracting the Apache Kafka software
 ```docker
 RUN             echo '#!/bin/bash' > /usr/bin/start-kafka.sh && \
                 echo "cd ${KAFKA_HOME}" >> /usr/bin/start-kafka.sh && \
@@ -204,4 +208,4 @@ RUN             echo '#!/bin/bash' > /usr/bin/start-kafka.sh && \
                 echo "tail -f ~/output.log" >> /usr/bin/start-kafka.sh  && \
                 chmod +x /usr/bin/start-kafka.sh
 ```
-This build a shell file, which contains all the execute commands what are needed to execute Kafka and Nifi parallel.
+This application builds a shell file, that contains all the execute commands are needed to execute Kafka and Nifi parallel.
