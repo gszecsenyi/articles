@@ -73,9 +73,9 @@ They can be joined from GetTwitter to PublishKafka_0_10 Processor.
 The configuration window can be accessed by right mouse click on GetTwitter. The following attributes has to be filled:
 
 * Consumer Key
-* Consumer Secret Key
-* AK
-* AKS
+* Consumer Secret 
+* Access Token
+* Access Token Secret
 
 ![alt text](https://cloud.githubusercontent.com/assets/363452/26026238/1fcd4b68-37f8-11e7-9a63-25fbbf00f358.png "Setup GetTwitter")
 
