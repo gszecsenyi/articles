@@ -1,4 +1,4 @@
-# Twitter Stream to Kafka with Apache Nifi
+# Streaming Twitter to Kafka with Apache Nifi
 
 A very common BigData use-case is when Twitter tweets are collected and analysed. This has more forms. 
 The Twitter stream will be stored on HDFS or another local drive or will be analysed or immediately processed with a streaming supported engine as Storm, Spark or Flink. 
