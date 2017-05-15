@@ -2,9 +2,9 @@
 
 A very common BigData use-case is the collection and processing of Twitter tweets. It can be done on different ways. The Twitter stream can be stored on HDFS or another local drive or immediately processed with a streaming supported engine as Storm, Spark or Flink. In both cases the first step is that the tweets will be collected in a Kafka queue.
 
-Kafka is a horizontally scalable, fault-tolerant distributed publish-subscribe messaging platform. It is written in Scala and was originally developed by LinkedIn. Suitable for both offline and online message consumption. 
+Kafka is a horizontally scalable, fault-tolerant distributed publish-subscribe messaging platform. It is written in Scala and was originally developed by LinkedIn. Suitable for both offline and online message consumption. Kafka maintains feeds of messages in topics. Producers write data to topics and consumers read from topics. Since Kafka is a distributed system, topics are partitioned and replicated across multiple nodes. In this case only one instance with one replication factor and one partition will be used. 
 
-Twitter delivers API, what should be accessed. Some years ago this was a bit complex part of the solutions, now, with the help of Apache Nifi it is getting simpler. The only task that has to be done is, to setup a Kafka (with zookeeper) and a Nifi in a docker container or on a server.
+Twitter delivers API, what should be accessed. Some years ago this was a bit complex part of the solutions, now, with the help of Apache Nifi it is getting simpler. The only task that has to be done is, to setup a Kafka (with zookeeper) and a Nifi in a docker container or on a server and configure Nifi with the Twitter access attributes.
 
 This article is about the setup of the environment and the configuration of the Kafka producer with Apache Nifi.
 
