@@ -123,7 +123,7 @@ docker rm -f twitter2kafka_container
 
 ## The Dockerfile
 
-```docker
+```dockerfile
 # based on input by: Guido Schmutz <@gschmutz>
 
 FROM            trivadisbds/base
@@ -185,14 +185,14 @@ ENV             SCALA_VERSION                 2.11
 Environmental variables must be set up for the container. These contains the URL, version and home for products. With this solution the Dockerfile can be maintained easier.
 
 
-```docker
+```dockerfile
 RUN             mkdir -p ${NIFI_HOME} && \
                 curl ${NIFI_DIST_MIRROR}/${NIFI_VERSION}/nifi-${NIFI_VERSION}-bin.tar.gz | tar xvz -C ${NIFI_HOME} --strip-components=1 && \
                 sed -i -e "s|^nifi.ui.banner.text=.*$|nifi.ui.banner.text=Trivadisbds Docker NiFi ${NIFI_VERSION}|" ${NIFI_HOME}/conf/nifi.properties
 ```
 
 Download and extracting the Apache Nifi software
-```docker
+```dockerfile
 RUN             wget -c ${KAFKA_DIST_MIRROR}/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz && \
                 tar -xzvf kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz && \
                 mv kafka_${SCALA_VERSION}-${KAFKA_VERSION} /opt && \
@@ -200,7 +200,7 @@ RUN             wget -c ${KAFKA_DIST_MIRROR}/${KAFKA_VERSION}/kafka_${SCALA_VERS
 ```
 
 Downloading and extracting the Apache Kafka software
-```docker
+```dockerfile
 RUN             echo '#!/bin/bash' > /usr/bin/start-kafka.sh && \
                 echo "cd ${KAFKA_HOME}" >> /usr/bin/start-kafka.sh && \
                 echo "bin/zookeeper-server-start.sh config/zookeeper.properties & > ~/output.log" >> /usr/bin/start-kafka.sh && \
