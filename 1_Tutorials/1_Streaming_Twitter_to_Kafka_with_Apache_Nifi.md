@@ -166,12 +166,12 @@ CMD ["start-kafka.sh"]
 
 ### And now let see the Dockerfile step by step: 
 
-```docker
+```dockerfile
 FROM            trivadisbds/base
 ```
 The parent image is the trivadisbds/base image, which is a RedHat image whith Java installation
 
-```docker
+```dockerfile
 ENV             NIFI_DIST_MIRROR             http://mirror.cc.columbia.edu/pub/software/apache/nifi
 ENV             NIFI_HOME                    /opt/nifi
 ENV             NIFI_VERSION                 1.2.0
