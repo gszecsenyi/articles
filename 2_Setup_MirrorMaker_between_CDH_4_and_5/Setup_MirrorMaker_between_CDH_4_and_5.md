@@ -1,11 +1,10 @@
 # Setup MirrorMaker between Cloudera CDH 4 and CDH 5.
 
 ## 1. About 
-There was running a migration project from CDH 4 to CDH5. One of the task was to mirroring Kafka Servers.
-There is a tool, the Kafka Mirrormaker which is available for this task. 
+This document is about a Kafka migration project from CDH4 to CDH5. One of the task is to mirroring Kafka Servers with the Kafka Mirrormaker tool.
 
 Mirrormaker is the part of the Kafka installation. It contains consumer and producer too. The consumer connects to the original Kafka Server and forwards the data to the new one. 
-If we are using mirroring different version of Kafka servers, then we must pay attention which version of Kafka is used. 
+If we are using to mirror different version of Kafka servers, then we must pay attention which version of Kafka is used. 
 
 Due to protocol change, unfortunately Mirrormaker from CDH5 does not work with the Kafka of CDH4. We have to execute it on CDH4. 
 
