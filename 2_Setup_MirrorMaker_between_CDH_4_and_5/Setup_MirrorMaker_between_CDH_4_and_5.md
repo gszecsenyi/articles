@@ -1,4 +1,4 @@
-# Setup MirrorMaker between CDH 4 and CDH 5.
+# Setup MirrorMaker between Cloudera CDH 4 and CDH 5.
 
 ## 1. About 
 There was running a migration project from CDH 4 to CDH5. One of the task was to mirroring Kafka Servers.
@@ -28,13 +28,13 @@ docker pull gszecsenyi/kafka:0.9.1
 ```
 #### 2. Now the images were downloaded. The containers will be created with the following commands
 ```
-docker run –d -t -i --name kafka_0.9.1 gszecsenyi/kafka:0.9.1 
+docker run -d -t -i --name kafka_0.9.1 gszecsenyi/kafka:0.9.1 
 ```
 #### 3. Log in into kafka_0.9.1 container mit the following command
 ```
 docker exec -t -i kafka_0.9.1 /bin/bash
 ```
-#### 4. Get the IP-Adresse with  ifconfig comamnd (inet addr for eth0 interface)
+#### 4. Get the IP-adress with  ifconfig comamnd (inet addr for eth0 interface)
 ```
 root@f335b0c750fd:~# ifconfig
 eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:03  
@@ -42,10 +42,10 @@ eth0      Link encap:Ethernet  HWaddr 02:42:ac:11:00:03  
 ```
 #### 5. Now we add the 0.9.1 kafka servers ip-adress in the 0.8.0's /etc/hosts file entry. 
 ```
-docker run –d -t -i --name kafka_0.8.0 --add-host f335b0c750fd: 172.17.0.3 gszecsenyi/kafka:0.8.0 
+docker run -d -t -i --name kafka_0.8.0 --add-host f335b0c750fd:172.17.0.3 gszecsenyi/kafka:0.8.0 
 ```
 
-### 2.3	Creating Kafka Topic and  producer configuration on source side
+### 2.3	Creating Kafka topic and producer configuration on source side
 
 #### 1.	Log in into kafka_0.8.0 container
 ```
@@ -78,9 +78,10 @@ EEEEEEEE
 
 #### 1. Log in into  kafka_0.8.0 container 
 ```
-docker exec -t -i kafka_0.8.0 /bin/bash 
+docker exec -t -i kafka_0.8.0 /bin/bash
+cd /opt/kafka
 ```
-#### 2. It has to create two configfiles. 
+#### 2. It has to create two config files. 
 
 #### 2.1 For source configuration the mm_source.config
 ```
@@ -89,10 +90,13 @@ consumer.timeout.ms=-1
 group.id=MirrorMaker
 ```
 
+
 #### 2.2 For target configuration the mm_target.config
 ```
 metadata.broker.list=172.17.0.2:9092
 ```
+The ip address is the same as in the add-host parameter!
+
 ## 3. Starting MirrorMaker 
 
 #### 1. We start a new shell in kafka_0.8.0
@@ -112,6 +116,7 @@ docker exec -t -i kafka_0.9.1 /bin/bash
 ```
 #### 2.  Execute the console consumer to check the data from MirrorMaker
 ```
+cd /opt/kafka
 bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic topik_1 &
 ```
 #### 3. Put soe test data in the kafka_0.8.0 producer einschreiben
@@ -124,5 +129,8 @@ ZZZZZZ
 ```
 bin/kafka-run-class.sh kafka.tools.ConsumerOffsetChecker --group MirrorMaker --zkconnect localhost:2181 --topic topik_1
 ```
-
- 
+This is a sample result:
+```
+Group           Topic                          Pid Offset          logSize         Lag             Owner
+MirrorMaker     topik_1                        0   14              14              0               MirrorMaker_df11f8d83335-1495714874078-ea530944-0
+``` 
